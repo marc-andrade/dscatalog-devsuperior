@@ -13,26 +13,27 @@ import java.util.List;
 @RestController
 @RequestMapping("/categories")
 public class CategoryResource {
-
     @Autowired
     private CategoryService categoryService;
-
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> findAll(){
 
         return ResponseEntity.ok().body(categoryService.findAll());
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> findById(@PathVariable Long id){
         return ResponseEntity.ok().body(categoryService.findById(id));
     }
-
     @PostMapping
     public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO categoryDTO){
         categoryDTO = categoryService.insert(categoryDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(categoryDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(categoryDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto){
+        return ResponseEntity.ok().body(categoryService.update(id,dto));
     }
 }
