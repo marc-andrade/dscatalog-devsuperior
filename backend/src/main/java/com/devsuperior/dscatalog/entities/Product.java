@@ -14,7 +14,8 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class Product implements Serializable {
 
     @Serial
