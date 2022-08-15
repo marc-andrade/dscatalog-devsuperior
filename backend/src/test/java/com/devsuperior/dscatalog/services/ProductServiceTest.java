@@ -48,6 +48,7 @@ class ProductServiceTest {
     private long dependentId;
     private PageImpl<Product> page;
     private Product product;
+    private ProductDTO productDTO;
     private Category category;
 
     @BeforeEach
@@ -57,20 +58,21 @@ class ProductServiceTest {
         dependentId = 3L;
         category = Factory.createCategory();
         product = Factory.createProduct();
-        page = new PageImpl<>(List.of());
+        productDTO = Factory.createProductDTO();
+        page = new PageImpl<>(List.of(product));
 
         Mockito.when(repository.findAll((Pageable) any())).thenReturn(page);
 
-        Mockito.when(repository.save(any())).thenReturn(product);
+        when(repository.save(any())).thenReturn(product);
 
         Mockito.when(repository.findById(existingID)).thenReturn(Optional.of(product));
         Mockito.when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
 
-        when(repository.getOne(existingID)).thenReturn(product);
-        when(repository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
+        when(repository.getReferenceById(existingID)).thenReturn(product);
+        when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
 
-        Mockito.when(categoryRepository.getOne(existingID)).thenReturn(category);
-        Mockito.when(repository.getOne(nonExistingId)).thenThrow(EntityNotFoundException.class);
+        Mockito.when(categoryRepository.getReferenceById(existingID)).thenReturn(category);
+        //Mockito.when(repository.getReferenceById(nonExistingId)).thenThrow(EntityNotFoundException.class);
 
         doNothing().when(repository).deleteById(existingID);
 
@@ -109,19 +111,25 @@ class ProductServiceTest {
         });
     }
 
+//    @Test
+//    void insert() {
+//    }
+
     @Test
-    void insert() {
+    void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExists() {
+
+        assertThrows(ResourceNotFoundException.class, () -> {
+            service.update(nonExistingId, productDTO);
+        });
+
     }
 
     @Test
     void updateShouldReturnProductDTOWhenIdExists() {
 
-        ProductDTO productDTO = Factory.createProductDTO();
-
         ProductDTO response = service.update(existingID, productDTO);
 
         assertNotNull(response);
-
     }
 
     @Test

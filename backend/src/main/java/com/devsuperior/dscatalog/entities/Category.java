@@ -7,7 +7,9 @@ import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -31,6 +33,10 @@ public class Category implements Serializable {
 
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant updatedAt;
+
+    @ManyToMany(mappedBy = "categories")
+    @ToString.Exclude
+    private Set<Product> products = new HashSet<>();
     @PrePersist
     public void prePersist(){
         createdAt = Instant.now();

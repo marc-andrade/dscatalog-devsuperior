@@ -5,13 +5,15 @@ import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
 
 import java.time.Instant;
-import java.util.Set;
 
 public class Factory {
 
     public static Product createProduct(){
         Category cat = createCategory();
-        return new Product(1L,"Phone", "Good Phone", 800.0, "https://img.com/img.png", Instant.parse("2022-08-10T14:53:00Z"), Set.of(cat));
+        Product product = new Product(1L,"Phone", "Good Phone", 800.0
+                , "https://img.com/img.png", Instant.parse("2022-08-10T14:53:00Z"));
+        product.getCategories().add(cat);
+        return product;
     }
 
     public static ProductDTO createProductDTO(){
@@ -20,6 +22,6 @@ public class Factory {
     }
 
     public static Category createCategory(){
-        return new Category(1L,"Electronics",null,null);
+        return new Category(4L,"Electronics",Instant.now(),Instant.now(),null);
     }
 }

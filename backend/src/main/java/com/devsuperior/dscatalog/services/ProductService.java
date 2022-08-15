@@ -1,5 +1,6 @@
 package com.devsuperior.dscatalog.services;
 
+import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
@@ -44,7 +45,7 @@ public class ProductService {
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         try {
-            Product product = repository.getOne(id);
+            Product product = repository.getReferenceById(id);
             copyDtoToEntity(dto, product);
             return new ProductDTO(repository.save(product));
         }catch (EntityNotFoundException e){
@@ -71,9 +72,9 @@ public class ProductService {
         product.setPrice(dto.getPrice());
 
         product.getCategories().clear();
-        dto.getCategories().forEach(catDto -> {
-            Category category = categoryRepository.getOne(catDto.getId());
-            product.getCategories().add(category);
-        });
+       for(CategoryDTO catDto : dto.getCategories()){
+          Category category = categoryRepository.getReferenceById(catDto.getId());
+          product.getCategories().add(category);
+       }
     }
 }
