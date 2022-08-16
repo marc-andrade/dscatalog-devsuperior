@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class FiledMessage {
+public class FieldMessage {
 
     private String fieldName;
     private String message;
